@@ -1,0 +1,29 @@
+# https://github.com/oracle/docker-images/blob/main/OracleDatabase/SingleInstance/README.md
+# download LINUX.X64_193000_db_home.zip http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html
+# move it to: docker-images/OracleDatabase/SingleInstance/dockerfiles/19.3.0
+
+services:
+  db:
+    image: oracle/database:19.3.0-ee
+    ports:
+      - 1521:1521
+      - 5500:5500 
+    environment:
+      ORACLE_PWD: very-secured-pass
+    volumes:
+      - oracle_vol:/opt/oracle/oradata
+
+  jira:
+    build:
+      context: .
+      dockerfile: jira-with-oracle-driver.dockerfile
+    volumes:
+      - jira_oracle_vol:/var/atlassian/application-data/jira 
+    ports:
+      - 8090:8080
+    depends_on:
+      - db
+
+volumes:
+  oracle_vol:
+  jira_oracle_vol:

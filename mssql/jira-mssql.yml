@@ -1,0 +1,23 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: myStrong(!)Password
+    volumes:
+      - mssql_vol:/var/opt/mssql
+
+  jira:
+    image: atlassian/jira-software:latest
+    volumes:
+      - jira_mssql_vol:/var/atlassian/application-data/jira 
+    ports:
+      - 8070:8080
+    depends_on:
+      - db
+
+volumes:
+  mssql_vol:
+  jira_mssql_vol:

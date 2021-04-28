@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mysql:8.0.24
+    command: --lower_case_table_names=1 --default-authentication-plugin=mysql_native_password --default-storage-engine=INNODB --character-set-server=utf8mb4 --innodb_default_row_format=DYNAMIC --innodb_log_file_size=2G
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: very-secured-pass
+      MYSQL_DATABASE: jira
+      MYSQL_USER: jira
+      MYSQL_PASSWORD: jira
+    volumes:
+      - mysql_vol:/var/lib/mysql  
+
+  jira:
+    build:
+      context: .
+      dcokerfile: jira-with-mysql-driver.dockerfile
+    volumes:
+      - jira_mysql_vol:/var/atlassian/application-data/jira 
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  mysql_vol:
+  jira_mysql_vol:
