@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:10
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgresql:/var/lib/postgresql/data  
+
+  confluence:
+    image: atlassian/confluence-server:6.15.10-ubuntu-18.04-adoptopenjdk8
+    environment:
+      ATL_PROXY_NAME: sandbox-tnh.example.net
+      ATL_PROXY_PORT: 443
+      ATL_TOMCAT_SCHEME: https
+      ATL_TOMCAT_SECURE: "true"
+      JVM_MINIMUM_MEMORY: 6g
+      JVM_MAXIMUM_MEMORY: 6g
+      JVM_SUPPORT_RECOMMENDED_ARGS: -Datlassian.recovery.password=gdf89!v14Rds34xcEsw
+    volumes:
+      - ./confluence:/var/atlassian/application-data/confluence 
+    ports:
+      - 8090:8090
+    depends_on:
+      - db
+
+volumes:
+  postgresql:
