@@ -16,6 +16,7 @@ services:
       JVM_MINIMUM_MEMORY: 6g
       JVM_MAXIMUM_MEMORY: 6g
       JVM_SUPPORT_RECOMMENDED_ARGS: -Datlassian.recovery.password=gdf89!v14Rds34xcEsw
+      TZ: America/Los_Angeles
     volumes:
       - ./confluence:/var/atlassian/application-data/confluence 
     ports:
