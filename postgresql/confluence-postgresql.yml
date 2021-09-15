@@ -4,7 +4,11 @@ services:
     environment:
       POSTGRES_PASSWORD: password
     volumes:
-      - postgresql:/var/lib/postgresql/data  
+      - postgresql:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready --username=postgres && psql --username=postgres --list"
+      timeout: 10s
+      retries: 20
 
   confluence:
     image: atlassian/confluence-server:6.15.10-ubuntu-18.04-adoptopenjdk8
@@ -22,7 +26,8 @@ services:
     ports:
       - 8090:8090
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   postgresql:

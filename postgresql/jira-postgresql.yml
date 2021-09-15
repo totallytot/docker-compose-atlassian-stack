@@ -4,7 +4,11 @@ services:
     environment:
       POSTGRES_PASSWORD: DatabasePassword
     volumes:
-      - postgresql_vol:/var/lib/postgresql/data  
+      - postgresql_vol:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready --username=postgres && psql --username=postgres --list"
+      timeout: 10s
+      retries: 20 
 
   jira:
     image: atlassian/jira-software:latest
@@ -13,7 +17,8 @@ services:
     ports:
       - 8060:8080
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   postgresql_vol:
